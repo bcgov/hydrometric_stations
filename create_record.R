@@ -14,9 +14,8 @@
 
 # Packages ----------------------------------------------------------------
 
-library(tidyverse)
-library(sf)
-library(bcmaps)
+library(dplyr)
+library(readr)
 library(tidyhydat)
 
 
@@ -94,10 +93,10 @@ colnames(bc_stns) <- c("WATRSHD_ID", "START_DATE", "HDRMTRCSTT", "WTr_GRP_CD", "
 
 
 ## Output data to keep a record of the data history
-readr::write_csv(bc_stns, paste0("previous_records/bc_hydrometric_",Sys.Date(),".csv"))
+write_csv(bc_stns, paste0("previous_records/bc_hydrometric_",Sys.Date(),".csv"))
 
 ## Output .csv file
-readr::write_csv(bc_stns, "bc_hydrometric.csv")
+write_csv(bc_stns, "bc_hydrometric.csv")
 
 
 
