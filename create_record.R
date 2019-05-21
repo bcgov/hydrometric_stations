@@ -16,7 +16,13 @@
 
 library(dplyr)
 library(readr)
+library(purrr)
 library(tidyhydat)
+#library(remotes)
+#install_github("bcgov/bcdata")
+library(bcdata)
+library(sf)
+
 
 
 # Functions ---------------------------------------------------------------
@@ -37,6 +43,33 @@ archive_url <- function(station_number){
 #bc_stns <- tidyhydat::hy_stations(prov_terr_state_loc = "BC")
 ## Using allstations here
 bc_stns <- filter(allstations, PROV_TERR_STATE_LOC == "BC")
+
+
+# Add in watershed info ---------------------------------------------------
+
+## TODO: Add in stream order
+
+## Find watershed group
+## This will take a little while to download
+ws_group <- bcdc_query_geodata("51f20b1a-ab75-42de-809d-bf415a0f9c62") %>%
+  select(WATERSHED_GROUP_ID, WATERSHED_GROUP_CODE) %>%
+  collect() %>%
+  select(WATRSHD_ID = WATERSHED_GROUP_ID, WTr_GRP_CD = WATERSHED_GROUP_CODE)
+
+
+bc_stns_sp <- st_as_sf(bc_stns, coords = c("LONGITUDE", "LATITUDE"),
+           agr = "constant",
+           crs = 4326) %>%
+  mutate(LATITUDE = unlist(map(.$geometry,1)),
+         LONGITUDE = unlist(map(.$geometry,2))) %>%
+  st_transform(3005)
+
+bc_stns_ws <- bc_stns_sp %>%
+  st_join(ws_group) %>%
+  st_set_geometry(NULL)
+
+
+
 
 ## Finding the date range of the data for all measurement (level, flow etc)
 
@@ -60,19 +93,16 @@ stn_regulation <- hy_stn_regulation(prov_terr_state_loc = "BC") %>%
 ## Columns to do/ filled with NA's:
 ## STREAM_ORD
 ## CAPTR_SCAL
-## WATRSHD_ID
-## WTr_GRP_CD
 ## GEOMETRY
 
 ## Columns with Uncertain Status
 # HDRMTRCSTT
-# OBJECTID
 
 ## Be nice to find a way to test if the urls work
 ## A faulty url like this: https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=13EA004 just directs to the search page
 
 ## Assign stations to drainages
-bc_stns <- bc_stns %>%
+bc_stns <- bc_stns_ws %>%
   mutate(REALTM_URL = case_when(
     REAL_TIME == TRUE ~ real_url(STATION_NUMBER)
   )) %>% ## generate realtime links
@@ -80,8 +110,8 @@ bc_stns <- bc_stns %>%
   mutate(FEAT_CODE = "CF29300000") %>%
   left_join(select(stn_regulation, STATION_NUMBER, REGULATED)) %>%
   left_join(select(full_date_range, STATION_NUMBER, DATE_FROM, DATE_TO)) %>%
-  mutate(WATRSHD_ID = "NA", HDRMTRCSTT = "NA", WTr_GRP_CD = "NA", STREAM_ORD = "NA", GEOMETRY = "NA" ,
-         OBJECTID = "NA", CAPTR_SCAL = "NA") %>%
+  mutate(HDRMTRCSTT = NA_character_, STREAM_ORD = NA_character_, GEOMETRY = NA_character_,
+         OBJECTID = NA_character_, CAPTR_SCAL = NA_character_) %>%
   select(WATRSHD_ID, DATE_FROM, HDRMTRCSTT, WTr_GRP_CD, STREAM_ORD, HYD_STATUS, REAL_TIME, DATE_TO, REALTM_URL,
          ARCHIV_URL, REGULATED, GEOMETRY, OBJECTID, STATION_NUMBER, CAPTR_SCAL, STATION_NAME, FEAT_CODE, LATITUDE, LONGITUDE)
 
