@@ -9,7 +9,7 @@ hydrometric_stations
 
 ### Usage
 
-Process used to create the [*Hydrometric Stations - Active and Discontinued*](https://catalogue.data.gov.bc.ca/dataset/hydrometric-stations-active-and-discontinued) data object in the [BC Data Catalogue](https://catalogue.data.gov.bc.ca/dataset). The repository outlines the process used in R with the [tidyhydat](https://CRAN.R-project.org/package=tidyhydat) package to create the data object. In addition the [`bcdata`](www.github.com/bcgov/bcdata)
+Process used to create the [*Hydrometric Stations - Active and Discontinued*](https://catalogue.data.gov.bc.ca/dataset/hydrometric-stations-active-and-discontinued) data object in the [BC Data Catalogue](https://catalogue.data.gov.bc.ca/dataset). The repository outlines the process used in R with the [tidyhydat](https://CRAN.R-project.org/package=tidyhydat) and [bcdata](https://CRAN.R-project.org/package=bcdata) packages to create the data object.
 
 ### Project Status
 Updated with each quarterly release of [HYDAT](https://ec.gc.ca/rhc-wsc/default.asp?n=9018B5EC-1), the Environment and Climate Change Canada database of hydrometric data.  

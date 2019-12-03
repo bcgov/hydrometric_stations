@@ -18,8 +18,6 @@ library(dplyr)
 library(readr)
 library(purrr)
 library(tidyhydat)
-#library(remotes)
-#install_github("bcgov/bcdata")
 library(bcdata)
 library(sf)
 
