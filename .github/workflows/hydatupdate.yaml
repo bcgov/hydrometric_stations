@@ -28,7 +28,7 @@ jobs:
           Sys.setenv("NEED_UPDATE" = TRUE)
 
       - name: Check env var
-        run: ${{ "NEED_UPDATE"}}
+        run: ${{ NEED_UPDATE }}
 
 #      - name: Deploy package
 #        run: |
