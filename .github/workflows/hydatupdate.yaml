@@ -1,0 +1,31 @@
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 12 7 * *'
+  push:
+    branches: master
+
+name: layerupdate
+
+jobs:
+  layerupdate:
+    runs-on: macOS-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-r@master
+
+      - name: Install dependencies/functions
+        run: |
+          install.packages(c("httr"))
+          source("R/functions.R")
+        shell: Rscript {0}
+
+#      - name: Deploy package
+#        run: |
+#          if (get_current_hydat() != record_hydat) {
+#             writeLines(get_current_hydat(), "record_hydat_date.txt")
+#             }
+#        shell: Rscript {0}
