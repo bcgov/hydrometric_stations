@@ -7,6 +7,9 @@ on:
 
 name: layerupdate
 
+
+
+
 jobs:
   layerupdate:
     runs-on: macOS-latest
@@ -21,19 +24,12 @@ jobs:
         run: |
           install.packages(c("httr"))
           source("R/functions.R")
+        
       
       - name: Set vars
         run: echo "foo1"
         env:
            NEED_UPDATE: TRUE
-
-      - name: Check env var
-        if: NEED_UPDATE == 'TRUE'
-        run: echo "foo"
-
-#      - name: Deploy package
-#        run: |
-#          if (get_current_hydat() != record_hydat) {
-#             writeLines(get_current_hydat(), "record_hydat_date.txt")
-#             }
-#        shell: Rscript {0}
+      
+      - name: Create an issue
+        uses: JasonEtco/create-an-issue@v2.4.0
