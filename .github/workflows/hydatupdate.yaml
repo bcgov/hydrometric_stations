@@ -28,7 +28,8 @@ jobs:
           Sys.setenv("NEED_UPDATE" = TRUE)
 
       - name: Check env var
-        run: ${{ NEED_UPDATE }}
+        if: NEED_UPDATE == 'TRUE'
+        run: echo "foo"
 
 #      - name: Deploy package
 #        run: |
