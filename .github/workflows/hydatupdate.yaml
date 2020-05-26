@@ -23,9 +23,13 @@ jobs:
           source("R/functions.R")
         shell: Rscript {0}
 
-      - name: Check for new hydat
-        run: |
-          Sys.setenv("NEED_UPDATE" = TRUE)
+      #- name: Check for new hydat
+      #  run: |
+      #    Sys.setenv("NEED_UPDATE" = TRUE)
+      
+      - name: Set vars
+          env:
+           NEED_UPDATE: TRUE
 
       - name: Check env var
         if: NEED_UPDATE == 'TRUE'
