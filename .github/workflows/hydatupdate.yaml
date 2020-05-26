@@ -28,7 +28,7 @@ jobs:
       #    Sys.setenv("NEED_UPDATE" = TRUE)
       
       - name: Set vars
-          env:
+        env:
            NEED_UPDATE: TRUE
 
       - name: Check env var
