@@ -24,7 +24,7 @@ jobs:
         run: |
           install.packages(c("httr"))
           source("R/functions.R")
-        
+        shell: Rscript {0}
       
       - name: Set vars
         run: echo "foo1"
