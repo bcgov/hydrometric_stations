@@ -23,6 +23,7 @@ jobs:
           source("R/functions.R")
       
       - name: Set vars
+        run: echo "foo1"
         env:
            NEED_UPDATE: TRUE
 
