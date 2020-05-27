@@ -14,15 +14,13 @@ jobs:
       - uses: actions/checkout@v2
 
       - uses: r-lib/actions/setup-r@master
-
-      - name: Install dependencies
+        
+      - name: Install dep and create issue
         run: |
           install.packages(c("curl","httr", "projmgr"))
-        shell: Rscript {0}
-      - name: Create issue
-        run: |
           source("create_issue.R")
         shell: Rscript {0}
+        
       - name: commit current date file
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
