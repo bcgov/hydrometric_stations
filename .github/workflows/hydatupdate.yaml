@@ -1,4 +1,6 @@
 on:
+  schedule:
+    - cron: '30 4 * * 1'
   push:
     branches: master
 
@@ -13,18 +15,17 @@ jobs:
 
       - uses: r-lib/actions/setup-r@master
 
-      - name: Install dependencies/functions
+      - name: Install dependencies
         run: |
-          install.packages(c("httr"))
-          source("R/functions.R")
+          install.packages(c("httr", "projmgr"))
         shell: Rscript {0}
-      
-      - name: Set vars
-        run: echo "foo1"
-        env:
-           NEED_UPDATE: TRUE
-      
-      - name: Create an issue
-        uses: JasonEtco/create-an-issue@v2.4.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create issue
+        run: |
+          source("R/create_issue.R")
+        shell: Rscript {0}
+      - name: commit current date file
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add "record_hydat_date.txt"
+            git commit -m 'update date file'
+          fi

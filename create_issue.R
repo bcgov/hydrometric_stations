@@ -11,17 +11,10 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 
-## Create realtime url
-real_url <- function(station_number){
-  paste0("https://wateroffice.ec.gc.ca/report/real_time_e.html?stn=", station_number)
-}
+library(projmgr)
+source("R/functions.R")
 
-## Create archival url
-archive_url <- function(station_number){
-  paste0("https://wateroffice.ec.gc.ca/report/historical_e.html?stn=", station_number)
-}
-
-
+## Define a current hydat
 get_current_hydat <- function(){
   base_url <- "http://collaboration.cmc.ec.gc.ca/cmc/hydrometrics/www/"
 
@@ -32,9 +25,29 @@ get_current_hydat <- function(){
   new_hydat <- as.Date(substr(gsub(
     "^.*\\Hydat_sqlite3_", "",
     httr::content(x, "text")
-    ), 1, 8), "%Y%m%d")
+  ), 1, 8), "%Y%m%d")
 
   as.character(new_hydat)
 
-
 }
+
+## Read record hydat date
+record_hydat <- readLines("record_hydat_date.txt")
+
+## Pull current data
+current_hydat <- get_current_hydat()
+
+## if they are different create an issue
+if (current_hydat != record_hydat) {
+  repo_ref <- create_repo_ref("bcgov", "hydrometric_stations")
+
+  post_issue(repo_ref,
+             title = "Update Layer",
+             body = paste0("Hydat was updated on ", current_hydat, ". The record needs updating."),
+             labels = 'update',
+             assignees = "boshek")
+
+  ## write a new file to the repo
+  writeLines(current_hydat, "record_hydat_date.txt")
+}
+
