@@ -31,4 +31,5 @@ jobs:
           if [[ -n "$(git status --porcelain)" ]]; then
             git add "record_hydat_date.txt"
             git commit -m 'update date file'
+            git push https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:master
           fi
