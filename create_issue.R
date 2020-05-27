@@ -12,7 +12,6 @@
 
 
 library(projmgr)
-source("R/functions.R")
 
 ## Define a current hydat
 get_current_hydat <- function(){
