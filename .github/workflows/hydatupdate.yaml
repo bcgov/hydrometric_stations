@@ -25,6 +25,11 @@ jobs:
           install.packages(c("curl","httr", "projmgr"))
           source("create_issue.R")
         shell: Rscript {0}
+      
+      - name: Setup git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
         
       - name: commit current date file
         run: |
