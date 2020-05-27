@@ -23,6 +23,7 @@ library(sf)
 
 
 
+
 # Functions ---------------------------------------------------------------
 
 ## Create realtime url
@@ -38,9 +39,20 @@ archive_url <- function(station_number){
 
 # Get data ----------------------------------------------------------------
 
-#bc_stns <- tidyhydat::hy_stations(prov_terr_state_loc = "BC")
-## Using allstations here
-bc_stns <- filter(allstations, PROV_TERR_STATE_LOC == "BC")
+hy_stns <- hy_stations(prov_terr_state_loc = "BC") %>%
+  select(STATION_NUMBER, STATION_NAME, LATITUDE, LONGITUDE, HYD_STATUS, REAL_TIME)
+
+
+rl_stns <- realtime_stations(prov_terr_state_loc = "BC") %>%
+  filter(!STATION_NUMBER %in% hy_stns$STATION_NUMBER) %>%
+  select(STATION_NUMBER, STATION_NAME, LATITUDE, LONGITUDE) %>%
+  mutate(HYD_STATUS = NA_character_, REAL_TIME = TRUE)
+
+
+bc_stns <- hy_stns %>%
+  bind_rows(rl_stns) %>%
+  mutate(LATITUDE = round(LATITUDE, 3), LONGITUDE = round(LONGITUDE, 3))
+
 
 
 # Add in watershed info ---------------------------------------------------
@@ -58,8 +70,8 @@ ws_group <- bcdc_query_geodata("51f20b1a-ab75-42de-809d-bf415a0f9c62") %>%
 bc_stns_sp <- st_as_sf(bc_stns, coords = c("LONGITUDE", "LATITUDE"),
            agr = "constant",
            crs = 4326) %>%
-  mutate(LATITUDE = unlist(map(.$geometry,1)),
-         LONGITUDE = unlist(map(.$geometry,2))) %>%
+  mutate(LONGITUDE = unlist(map(.$geometry,1)),
+         LATITUDE = unlist(map(.$geometry,2))) %>%
   st_transform(3005)
 
 bc_stns_ws <- bc_stns_sp %>%
@@ -83,7 +95,8 @@ full_date_range <- hy_daily(prov_terr_state_loc = "BC") %>%
 stn_regulation <- hy_stn_regulation(prov_terr_state_loc = "BC") %>%
   mutate(REGULATED = case_when(
     REGULATED == FALSE ~ "NATURAL",
-    REGULATED == TRUE ~ "REGULATED"
+    REGULATED == TRUE ~ "REGULATED",
+    TRUE ~ NA_character_
     ))
 
 # Add relevant columns ----------------------------------------------------
