@@ -17,7 +17,7 @@ jobs:
         
       - name: Install dep and create issue
         run: |
-          install.packages(c("curl","httr", "projmgr"))
+          install.packages(c("curl","httr", "projmgr"), type = "binary)
           source("create_issue.R")
         shell: Rscript {0}
         
