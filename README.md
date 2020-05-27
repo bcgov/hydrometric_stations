@@ -14,6 +14,14 @@ Process used to create the [*Hydrometric Stations - Active and Discontinued*](ht
 ### Project Status
 Updated with each quarterly release of [HYDAT](https://ec.gc.ca/rhc-wsc/default.asp?n=9018B5EC-1), the Environment and Climate Change Canada database of hydrometric data.  
 
+### Usage
+This data can be retrieved through the BC Data Catalogue or using the bcdata R package:
+
+```
+library(bcdata)
+bcdc_get_data('4c169515-6c41-4f6a-bd30-19a1f45cad1f')
+```
+
 ### Getting Help or Reporting an Issue
 
 To report bugs/issues/feature requests, please file an [issue](https://github.com/bcgov/hydrometric_stations/issues/).
