@@ -34,7 +34,7 @@ get_current_hydat <- function(){
 record_hydat <- readLines("record_hydat_date.txt")
 
 ## Pull current data
-current_hydat <- get_current_hydat()
+current_hydat <- "2020-05-27" #get_current_hydat()
 
 ## if they are different create an issue
 if (current_hydat != record_hydat) {
