@@ -1,20 +1,13 @@
 on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '0 12 7 * *'
   push:
     branches: master
 
 name: layerupdate
 
 
-
-
 jobs:
   layerupdate:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
 
@@ -33,3 +26,5 @@ jobs:
       
       - name: Create an issue
         uses: JasonEtco/create-an-issue@v2.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
