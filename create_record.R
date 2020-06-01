@@ -129,7 +129,7 @@ bc_stns <- bc_stns_ws %>%
 colnames(bc_stns) <- c("WATRSHD_ID", "START_DATE", "HDRMTRCSTT", "WTr_GRP_CD", "STREAM_ORD",
                        "STN_OP_STA", "STN_RT_STA", "END_DATE", "REALTM_URL", "ARCHIV_URL", "FLOW_TYPE",
                        "GEOMETRY", "OBJECTID", "STATION_NO", "CAPTR_SCAL", "STATN_NAME",
-                       "FEAT_CODE", "X", "Y")
+                       "FEAT_CODE", "LATITUDE", "LONGITUDE")
 
 
 
