@@ -15,14 +15,11 @@
 # Packages ----------------------------------------------------------------
 
 library(dplyr)
+library(tidyhydat)
 library(readr)
 library(purrr)
-library(tidyhydat)
 library(bcdata)
 library(sf)
-library(fwagr) ## remotes::install_github("poissonconsulting/fwapgr")
-
-
 
 
 # Functions ---------------------------------------------------------------
@@ -58,14 +55,6 @@ bc_stns <- hy_stns %>%
 
 # Add in watershed info ---------------------------------------------------
 
-## TODO: Add in stream order
-
-
-nearest_stream <- map_df(seq_len(nrow(bc_stns)), ~fwa_nearest_stream(bc_stns$LONGITUDE[.x], bc_stns$LATITUDE[.x], srid = 4326) %>%
-                           mutate(STATION_NUMBER = bc_stns$STATION_NUMBER[.x]))
-
-watershed_info <- map_df(nearest_stream$linear_feature_id, ~fwa_collection("fwa_stream_networks_sp", filter = list(linear_feature_id = .x)))
-
 ## Find watershed group
 ## This will take a little while to download
 ws_group <- bcdc_query_geodata("51f20b1a-ab75-42de-809d-bf415a0f9c62") %>%
@@ -84,8 +73,6 @@ bc_stns_sp <- st_as_sf(bc_stns, coords = c("LONGITUDE", "LATITUDE"),
 bc_stns_ws <- bc_stns_sp %>%
   st_join(ws_group) %>%
   st_set_geometry(NULL)
-
-
 
 
 ## Finding the date range of the data for all measurement (level, flow etc)
